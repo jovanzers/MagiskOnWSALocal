@@ -88,12 +88,12 @@ out = session.post(
 
 doc = minidom.parseString(html.unescape(out.text))
 
-filenames = {}
-for node in doc.getElementsByTagName('Files'):
-    filenames[node.parentNode.parentNode.getElementsByTagName(
-        'ID')[0].firstChild.nodeValue] = f"{node.firstChild.attributes['InstallerSpecificIdentifier'].value}_{node.firstChild.attributes['FileName'].value}"
-    pass
-
+filenames = {
+    node.parentNode.parentNode.getElementsByTagName('ID')[
+        0
+    ].firstChild.nodeValue: f"{node.firstChild.attributes['InstallerSpecificIdentifier'].value}_{node.firstChild.attributes['FileName'].value}"
+    for node in doc.getElementsByTagName('Files')
+}
 identities = []
 for node in doc.getElementsByTagName('SecuredFragment'):
     filename = filenames[node.parentNode.parentNode.parentNode.getElementsByTagName('ID')[
